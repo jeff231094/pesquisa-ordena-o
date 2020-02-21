@@ -1,0 +1,89 @@
+from random import randint
+import matplotlib.pyplot as plt
+import timeit
+
+
+def geralista(tam):
+    lista = [100000, 200000, 300000, 400000, 500000]
+    x = 0
+    while x < tam:
+        n = randint(1, 10*tam)
+        lista.append(n)
+        x += 1
+    return lista
+
+
+def geralistapc(tam):
+    lista = [100000, 200000, 300000, 400000, 500000]
+    x = 0
+    while x < tam:
+        lista.append(tam)
+        tam -= 1
+    return lista
+
+
+def quicksort(lista):
+   quickSortAux(lista,0,len(lista)-1)
+
+def quickSortAux(lista,inicio,fim):
+   if inicio<fim:
+
+       Pdivisao = particao(lista,inicio,fim)
+
+       quickSortAux(lista,inicio,Pdivisao-1)
+       quickSortAux(lista,Pdivisao+1,fim)
+
+
+def particao(lista,inicio,fim):
+   pivo = lista[inicio]
+
+   Mesquerda = inicio+1
+   Mdireita = fim
+
+   done = False
+   while not done:
+
+       while Mesquerda <= Mdireita and lista[Mesquerda] <= pivo:
+           Mesquerda = Mesquerda + 1
+
+       while lista[Mdireita] >= pivo and Mdireita >= Mesquerda:
+           Mdireita = Mdireita -1
+
+       if Mdireita < Mesquerda:
+           done = True
+       else:
+           temp = lista[Mesquerda]
+           lista[Mesquerda] = lista[Mdireita]
+           lista[Mdireita] = temp
+
+   temp = lista[inicio]
+   lista[inicio] = lista[Mdireita]
+   lista[Mdireita] = temp
+
+
+   return Mdireita
+   
+
+def desenhagrafico(x, y, z, xl = "Tamanho da lista", yl = "Tempo"):
+    plt.plot(x, y, label="Caso Médio")
+    plt.plot(x, z, label="Pior Caso")
+    plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure)
+    plt.title("QuickSort")
+    plt.ylabel(yl)
+    plt.xlabel(xl)
+    plt.show()
+
+xg = [10, 100, 300, 500, 700, 989]
+yg = []
+zg = []
+
+for i in xg:
+    listacm = geralista(i)
+    listapc = geralistapc(i)
+    val1 = timeit.timeit("quicksort({})".format(listacm), setup="from __main__ import quicksort", number=1)
+    yg.append(val1)
+    val2 = timeit.timeit("quicksort({})".format(listapc), setup="from __main__ import quicksort", number=1)
+    zg.append(val2)
+    print(val1, val2)
+
+desenhagrafico(xg, yg, zg)
