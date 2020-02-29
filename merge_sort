@@ -1,0 +1,84 @@
+from random import randint
+import matplotlib.pyplot as plt
+import timeit
+
+
+def geralista(tam):
+    lista = [20000, 40000, 60000,80000,100000]
+    x = 0
+    while x < tam:
+        n = randint(1, 10*tam)
+        lista.append(n)
+        x += 1
+    return lista
+
+def geralistapc(tam):
+    lista = [20000, 40000, 60000, 80000, 100000]
+    x = 0
+    while x < tam:
+        lista.append(tam)
+        tam -= 1
+    return lista
+
+
+def mergesort(lista):
+
+    if len(lista) > 1:
+
+        meio = len(lista)//2
+
+        listaDaEsquerda = lista[:meio]
+        listaDaDireita = lista[meio:]
+
+        mergesort(listaDaEsquerda)
+        mergesort(listaDaDireita)
+
+        i = 0
+        j = 0
+        k = 0
+
+        while i < len(listaDaEsquerda) and j < len(listaDaDireita):
+
+            if listaDaEsquerda[i] < listaDaDireita[j]:
+                lista[k]=listaDaEsquerda[i]
+                i += 1
+            else:
+                lista[k]=listaDaDireita[j]
+                j += 1
+            k += 1
+
+        while i < len(listaDaEsquerda):
+
+            lista[k]=listaDaEsquerda[i]
+            i += 1
+            k += 1
+
+        while j < len(listaDaDireita):
+            lista[k]=listaDaDireita[j]
+            j += 1
+            k += 1
+
+
+def desenhagrafico(x, y, z, xl = "Tamanho da lista", yl = "Tempo"):
+    plt.plot(x, y, label="Caso Médio")
+    plt.plot(x, z, label="Pior Caso")
+    plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure)
+    plt.title("mergesort")
+    plt.ylabel(yl)
+    plt.xlabel(xl)
+    plt.show()
+
+xg = [20000,40000,60000,80000,100000]
+yg = []
+zg = []
+
+for i in xg:
+    listacm = geralista(i)
+    listapc = geralistapc(i)
+    val1 = timeit.timeit("mergesort({})".format(listacm), setup="from __main__ import mergesort", number=1)
+    yg.append(val1)
+    val2 = timeit.timeit("mergesort({})".format(listapc), setup="from __main__ import mergesort", number=1)
+    zg.append(val2)
+    print(val1, val2)
+
+desenhagrafico(xg, yg, zg)
