@@ -1,0 +1,62 @@
+from random import randint
+import matplotlib.pyplot as plt
+import timeit
+
+
+def geralista(tam):
+    lista = [30000,40000,50000,60000,70000]
+    x = 0
+    while x < tam:
+        n = randint(1, 10*tam)
+        lista.append(n)
+        x += 1
+    return lista
+
+def geralistapc(tam):
+    lista = [30000,40000,50000,60000,70000]
+    x = 0
+    while x < tam:
+        lista.append(tam)
+        tam -= 1
+    return lista
+
+
+def shellSort(lista):
+
+
+    intervalo = len(lista) // 2
+
+    while intervalo > 0:
+        for index in range(intervalo, len(lista)):
+            pivo = lista[index]
+            aux_index = index
+            while aux_index >= intervalo and lista[aux_index - intervalo] > pivo:
+                lista[aux_index] = lista[aux_index - intervalo]
+                aux_index = aux_index - intervalo
+            lista[aux_index] = pivo
+
+        intervalo //= 2
+
+def desenhagrafico(x, y, z, xl = "Tamanho da lista", yl = "Tempo"):
+    plt.plot(x, y, label="Caso Médio")
+    plt.plot(x, z, label="Pior Caso")
+    plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure)
+    plt.title("shellSort")
+    plt.ylabel(yl)
+    plt.xlabel(xl)
+    plt.show()
+
+xg = [30000,40000,50000,60000,70000]
+yg = []
+zg = []
+
+for i in xg:
+    listacm = geralista(i)
+    listapc = geralistapc(i)
+    val1 = timeit.timeit("shellSort({})".format(listacm), setup="from __main__ import shellSort", number=1)
+    yg.append(val1)
+    val2 = timeit.timeit("shellSort({})".format(listapc), setup="from __main__ import shellSort", number=1)
+    zg.append(val2)
+    print(val1, val2)
+
+desenhagrafico(xg, yg, zg)
