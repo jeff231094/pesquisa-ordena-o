@@ -60,3 +60,4 @@ for i in xg:
     print(val1, val2)
 
 desenhagrafico(xg, yg, zg)
+
