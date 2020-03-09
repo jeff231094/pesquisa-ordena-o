@@ -22,20 +22,19 @@ def geralistapc(tam):
 
 
 def shellSort(lista):
-
-
-    intervalo = len(lista) // 2
-
-    while intervalo > 0:
-        for index in range(intervalo, len(lista)):
-            pivo = lista[index]
-            aux_index = index
-            while aux_index >= intervalo and lista[aux_index - intervalo] > pivo:
-                lista[aux_index] = lista[aux_index - intervalo]
-                aux_index = aux_index - intervalo
-            lista[aux_index] = pivo
-
-        intervalo //= 2
+    cont = 0
+    val = 1
+    while val > 0:
+        for i in range(val, len(lista)):
+            aux = lista[i]
+            j = i
+            cont += 1
+            while j >= val and aux < lista[j - val]:
+                lista[j] = lista[j - val]
+                j = j - val
+                lista[j] = aux
+        val = 0
+    return cont
 
 def desenhagrafico(x, y, z, xl = "Tamanho da lista", yl = "Tempo"):
     plt.plot(x, y, label="Caso Médio")
@@ -46,18 +45,17 @@ def desenhagrafico(x, y, z, xl = "Tamanho da lista", yl = "Tempo"):
     plt.xlabel(xl)
     plt.show()
 
-xg = [30000,40000,50000,60000,70000]
+xg = [1000, 10000, 30000, 50000, 70000, 100000]
 yg = []
 zg = []
 
 for i in xg:
     listacm = geralista(i)
     listapc = geralistapc(i)
-    val1 = timeit.timeit("shellSort({})".format(listacm), setup="from __main__ import shellSort", number=1)
+    val1 = timeit.timeit("shellSort({})".format(listacm), setup="from _main_ import shellSort", number=1)
     yg.append(val1)
-    val2 = timeit.timeit("shellSort({})".format(listapc), setup="from __main__ import shellSort", number=1)
+    val2 = timeit.timeit("shellSort({})".format(listapc), setup="from _main_ import shellSort", number=1)
     zg.append(val2)
     print(val1, val2)
 
 desenhagrafico(xg, yg, zg)
-
