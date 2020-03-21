@@ -1,0 +1,55 @@
+from random import randint
+import matplotlib.pyplot as plt
+import timeit
+
+def geralista(tam):
+    lista = []
+    x = 0
+    while x < tam:
+        n = randint(1, tam)
+        lista.append(n)
+        x += 1
+    return lista
+
+
+def Radixsort(lista):
+    base = 1
+    maior = max(lista)
+
+    while maior/base > 0:
+        indice = len(lista) + 1
+        ocorrencias = [0] * indice
+
+        for i in lista:
+            ocorrencias[i] += 1
+
+        k = 0
+
+        for i in range(indice):
+            for j in range(ocorrencias[i]):
+                lista[k] = i
+                k += 1
+        base *= 10
+
+
+
+
+def desenhagrafico(x, y, z, xl = "Entrada", yl = "Saida"):
+    plt.plot(x, y, label="Caso Médio")
+    plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure)
+    plt.title("Radixsort")
+    plt.ylabel(yl)
+    plt.xlabel(xl)
+    plt.show()
+
+xg = [20000,30000,40000,50000,60000]
+yg = []
+zg = []
+
+for i in xg:
+    listacm = geralista(i)
+    val1 = timeit.timeit("Radixsort({})".format(listacm), setup="from __main__ import Radixsort", number=1)
+    yg.append(val1)
+    print(val1)
+
+desenhagrafico(xg, yg, zg, xl = "Tamanho da lista", yl = "Tempo")
